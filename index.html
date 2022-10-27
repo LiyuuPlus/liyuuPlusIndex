@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>鲤鱼王的水溅跃</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0
+        }
+
+        body,
+        html {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-size: 12px;
+        }
+
+        body {
+            color: #fff;
+            text-align: center;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', 'Microsoft Yahei', PingFang-SC, sans-serif;
+            line-height: 1.5
+        }
+
+        a {
+            color: #fff;
+            text-decoration: none
+        }
+
+        #app {
+            position: relative;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        #app div.background-blur {
+            width: 100%;
+            height: 100%;
+            background-position: center center;
+            background-size: cover;
+            -webkit-filter: blur(5px);
+            filter: blur(5px);
+            transition: background-image 2s;
+        }
+
+        #app div.background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: contain;
+            background-position: center right;
+            background-repeat: no-repeat;
+            transition: background-image 2s;
+        }
+
+        .main {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            position: absolute;
+            top: 0;
+            left: 0px;
+            right: 0px;
+            margin: 0px auto;
+            height: 100%;
+            padding-top: 10px;
+        }
+
+        #id {
+            text-shadow: 0 0 24px #fff;
+            padding: 10px;
+        }
+
+        #id .avatar {
+            width: 128px;
+            height: 128px;
+            border-radius: 96px;
+            box-shadow: 0 0 24px -4px #fff;
+            -webkit-transition: transform 1000ms;
+            -moz-transition: transform 1000ms;
+            transition: transform 1000ms;
+        }
+
+        #id a:hover img {
+            -webkit-transform: rotate(360deg);
+            -moz-transform: rotate(360deg);
+            -ms-transform: rotate(360deg);
+            transform: rotate(360deg);
+        }
+
+        #id h1 {
+            font-size: 32px;
+            margin-top: 6px;
+            text-shadow: -1px 0 0.4rem #2196f3, 0 1px 0.4rem #2196f3, 1px 0 0.4rem #2196f3, 0 -1px 0.4rem #2196f3;
+        }
+
+        #id h1:before {
+            content: "@"
+        }
+
+        #id p {
+            font-size: 16px;
+            text-shadow: -1px 0 0.4rem #cf8300, 0 1px 0.4rem #cf8300, 1px 0 0.4rem #cf8300, 0 -1px 0.4rem #cf8300;
+        }
+
+        #id .music {
+            font-size: unset;
+            margin-bottom: -12px;
+        }
+
+        .scroll {
+            /* margin: 0px auto; */
+            overflow: scroll;
+            height: 100%;
+        }
+
+        .card {
+            /* background-color: rgba(255, 0, 0, 0); */
+            /* -webkit-backdrop-filter: blur(10px); */
+            /* backdrop-filter: blur(10px); */
+            /* border-radius: 8px; */
+            /* box-shadow: 0 0 16px -4px #000; */
+            color: #000;
+            margin: 8px auto;
+            padding: 0px;
+            box-sizing: border-box
+        }
+
+        .card-title {
+            font-size: 24px;
+            margin-bottom: 16px;
+            -webkit-user-select: none;
+            user-select: none
+        }
+
+        .action-list {
+            display: flex;
+            flex-direction: column;
+            width: 600px;
+            max-width: 90vw;
+            text-align: left;
+            box-sizing: border-box;
+            margin: 0 auto
+        }
+
+        .action-list+.action-list {
+            margin-top: 16px
+        }
+
+        .action-list .item {
+            /* border: 1px solid #ddd; */
+            border-radius: 4px;
+            /* background-color: rgba(255, 255, 255, .8); */
+            backdrop-filter: blur(20px);
+            background-color: rgb(255 255 255 / 48%);
+            color: #000;
+            padding: 16px 16px 16px 56px;
+            transition: .2s ease-in-out;
+            position: relative;
+            margin: 2px 0;
+            -webkit-user-select: none;
+            user-select: none
+        }
+
+        .action-list .item:hover {
+            background-color: rgba(239, 239, 239, .8)
+        }
+
+        .action-list .item .icon {
+            position: absolute;
+            left: 18px;
+            top: 24px;
+            width: 20px;
+            height: 20px
+        }
+
+        .action-list .item .title {
+            font-size: 14px
+        }
+
+        .action-list .item .description {
+            font-size: 12px;
+            margin-top: -4px;
+            opacity: .6
+        }
+
+        footer {
+            height: 24px;
+            line-height: 24px;
+            padding: 20px;
+            -webkit-user-select: none;
+            user-select: none
+        }
+
+        footer a {
+            font-size: 14px;
+            text-shadow: -1px 0 0.4rem #e91e63, 0 1px 0.4rem #e91e63, 1px 0 0.4rem #e91e63, 0 -1px 0.4rem #e91e63;
+        }
+
+        @media only screen and (max-width:600px) {
+            .card {
+                border-radius: 0;
+                width: 100vw;
+                padding: 24px 16px
+            }
+        }
+
+        /* scroll-view 不显示滚动条 */
+        ::-webkit-scrollbar {
+            width: 0;
+            height: 0;
+            background-color: transparent;
+        }
+    </style>
+    <script src="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/vue/2.6.14/vue.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://npm.elemecdn.com/font-awesome@4.7.0/css/font-awesome.min.css">
+</head>
+
+<body>
+    <div id="app">
+        <div id="background-blur" class="background-blur" :style="'background-image:url('+getIMG(bgindex)+')'">
+        </div>
+        <div id="background" class="background" :style="'background-image:url('+getIMG(bgindex)+')'">
+        </div>
+        <img id="background-next" :src="getIMG(nextindex)" style="display:none" />
+        <div class="main">
+            <div id="id">
+                <a :href="user.url"><img :src="user.avatar" class="avatar" alt="avatar"></a>
+                <h1><a :href="user.url" v-text="user.name"></a></h1>
+                <p v-text="user.desc"></p>
+                <p class="music"><iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=280
+                        height=52 src="//music.163.com/outchain/player?type=0&id=7609711096&auto=1&height=32"></iframe>
+                </p>
+            </div>
+            <div class="scroll">
+                <div class="card">
+                    <div class="action-list" v-for="appItem in appList">
+                        <a :href="app.url" target="_blank" class="item" v-for="app in appItem">
+                            <template v-if="app.icon">
+                                <i :class="'fa '+app.icon" class="icon"></i>
+                            </template>
+                            <template v-if="app.img">
+                                <img :src="app.img" class="icon">
+                            </template>
+                            <div class="title" v-text="app.name"></div>
+                            <div class="description" v-text="app.desc"></div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <footer>
+                <a href="https://beian.miit.gov.cn/" rel="nofollow external" target="_blank" v-text="beian"></a>
+            </footer>
+        </div>
+    </div>
+    <script>
+        var app = new Vue({
+            el: "#app",
+            data() {
+                return {
+                    background: [
+                        "https://www.alicem.top/usr/themes/blogimg/鲤鱼AliceCosplay1.jpg",
+                        "https://www.alicem.top/usr/themes/blogimg/鲤鱼AliceCosplay2.jpg",
+                        "https://www.alicem.top/usr/themes/blogimg/鲤鱼AliceCosplay3.jpg",
+                        "https://www.alicem.top/usr/themes/blogimg/鲤鱼AliceCosplay4.jpg",
+                        "https://www.alicem.top/usr/themes/blogimg/鲤鱼AliceCosplay5.jpg",
+                        "https://www.alicem.top/usr/themes/blogimg/鲤鱼AliceCosplay6.jpg",
+                        "https://www.alicem.top/usr/themes/blogimg/鲤鱼AliceCosplay7.jpg",
+                        "https://www.alicem.top/usr/themes/blogimg/鲤鱼AliceCosplay8.jpg",
+                        "https://www.alicem.top/usr/themes/blogimg/鲤鱼和泉纱雾Cosplay1.jpg",
+                        "https://www.alicem.top/usr/themes/blogimg/鲤鱼和泉纱雾Cosplay2.jpg",
+                        "https://www.alicem.top/usr/themes/blogimg/鲤鱼和泉纱雾Cosplay3.jpg",
+                        "https://www.alicem.top/usr/themes/blogimg/鲤鱼和泉纱雾Cosplay4.jpg",
+                        "https://www.alicem.top/usr/themes/blogimg/鲤鱼血小板Cosplay1.jpg",
+                        "https://www.alicem.top/usr/themes/blogimg/鲤鱼血小板Cosplay2.jpg",
+                        "https://www.alicem.top/usr/themes/blogimg/鲤鱼血小板Cosplay3.jpg",
+                        "https://www.alicem.top/usr/themes/blogimg/鲤鱼五等分Cosplay1.jpg",
+                        "https://www.alicem.top/usr/themes/blogimg/鲤鱼五等分Cosplay2.jpg",
+                        "https://www.alicem.top/usr/themes/blogimg/鲤鱼五等分Cosplay3.jpg",
+                        "https://www.alicem.top/usr/themes/blogimg/鲤鱼五等分Cosplay4.jpg",
+                        "https://www.alicem.top/usr/themes/blogimg/鲤鱼五等分Cosplay5.jpg",
+                    ],
+                    bgindex: 0,
+                    randlist: [0],
+                    chtime: 10,
+                    interval: null,
+                    user: {
+                        name: "沢城アリス",
+                        url: "https://www.alicem.top",
+                        avatar: "https://www.alicem.top/usr/themes/blogimg/SawashiroAlice.jpg",
+                        desc: "雪山千古冷，独照峨眉峰。"
+                    },
+                    beian: "闽ICP备18027166号-2",
+                    appList: [
+                        [
+                            {
+                                name: "爱丽丝的人偶屋",
+                                url: "https://www.alicem.top",
+                                desc: "My Dear Alice　夢への扉開いて",
+                                icon: "",
+                                img: "https://www.alicem.top/usr/themes/blogimg/alice.png"
+                            },
+                        ],
+                        [
+                            {
+                                name: "Github",
+                                url: "https://github.com/Whuihuan",
+                                desc: "小さくて愛らしい　君の手で",
+                                icon: "fa-github",
+                                img: ""
+                            },
+                            {
+                                name: "Twitter",
+                                url: "https://twitter.com/SawashiroAlice",
+                                desc: "Aliceが夢見た素敵な御伽噺を",
+                                icon: "fa-twitter",
+                                img: ""
+                            },
+                            {
+                                name: "THBWiki",
+                                url: "https://thwiki.cc/-/1c5s",
+                                desc: "僕にだけ聞かせてよ　Alice in Dream",
+                                icon: "",
+                                img: "https://thwiki.cc/favicon.ico"
+                            },
+                        ],
+                        [
+                            {
+                                name: "Liyuu直播间",
+                                url: "https://live.bilibili.com/5265",
+                                desc: "煌めけ 小星星",
+                                icon: "",
+                                img: "https://www.bilibili.com/favicon.ico"
+                            },
+                        ]
+                    ],
+                }
+            },
+            created() {
+                this.interval = setInterval(() => {
+                    this.bgindex = this.nextindex;
+                }, this.chtime * 1000);
+            },
+            methods: {
+                getIMG(index) {
+                    return this.background[this.randlist[index]];
+                },
+                // 刷新列表
+                RefreshList(list) {
+                    list.sort(() => {
+                        return 0.5 - Math.random();
+                    });
+                    return list;
+                },
+            },
+            computed: {
+                nextindex() {
+                    if (this.bgindex == 0) {
+                        this.randlist = this.RefreshList(
+                            Array.from({ length: this.background.length - 1 }, (o, i) => i + 1)
+                        );
+                        return 1;
+                    }
+                    else {
+                        return this.bgindex + 1;
+                    }
+                },
+            },
+            watch: {
+                bgindex(val) {
+                    if (val < 0 || val >= this.background.length - 1) {
+                        this.bgindex = 0;
+                    }
+                },
+            },
+        })
+    </script>
+</body>
+
+</html>
